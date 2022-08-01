@@ -1,8 +1,8 @@
 const books = [];
 const RENDER_EVENT = "render-todo";
 const BOOK_ID = "bookId";
-const BOOK_INCOMPLETED_ID = document.getElementById("incompleteBookList");
-const BOOK_COMPLETED_ID = document.getElementById("completedBookList");
+const BOOK_INCOMPLETED_ID = "incompleteBookshelfList";
+const BOOK_COMPLETED_ID = "completeBookshelfList";
 
 function generateId() {
   return +new Date();
@@ -140,9 +140,15 @@ function addBook() {
     bookTitle,
     bookAuthor,
     bookYear,
-    false
+    isCompleted
   );
   books.push(bookObject);
+
+  if (isCompleted) {
+    document.getElementById(BOOK_COMPLETED_ID).append(books);
+  } else {
+    document.getElementById(BOOK_INCOMPLETED_ID).append(books);
+  }
 
   document.dispatchEvent(new Event(RENDER_EVENT));
 }
@@ -156,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener(RENDER_EVENT, function () {
+  //console.log(books);
   const uncompletedBookList = document.getElementById(
     "incompleteBookshelfList"
   );
