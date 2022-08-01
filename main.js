@@ -88,8 +88,15 @@ function createBook(bookObject) {
     checkButton.addEventListener("click", function () {
       addBookToCompleted(bookObject.id);
     });
+    const trashButton = document.createElement("button");
+    trashButton.classList.add("red");
+    trashButton.innerText = "Hapus Buku";
 
-    containerAction.append(checkButton);
+    trashButton.addEventListener("click", function () {
+      removeBookFromCompleted(bookObject.id);
+    });
+
+    containerAction.append(checkButton, trashButton);
   }
   return container;
 }
