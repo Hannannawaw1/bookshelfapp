@@ -5,6 +5,29 @@ const BOOK_INCOMPLETED_ID = "incompleteBookshelfList";
 const BOOK_COMPLETED_ID = "completeBookshelfList";
 const SAVED_EVENT = "saved-book";
 const STORAGE_KEY = "BOOK-APPS";
+const selesaiDibaca = document.getElementById("inputBookIsComplete");
+selesaiDibaca.addEventListener("click", function () {
+  if (selesaiDibaca.checked) {
+    document.getElementById("submitStatus").innerText = "Belum selesai dibaca";
+    document.getElementById("submitStatus").innerText = "selesai dibaca";
+  } else {
+    document.getElementById("submitStatus").innerText = "Belum selesai dibaca";
+    document.getElementById("submitStatus").innerText = "Belum selesai dibaca";
+  }
+});
+const editselesaiDibaca = document.getElementById("inputBookIsComplete");
+editselesaiDibaca.addEventListener("click", function () {
+  if (selesaiDibaca.checked) {
+    document.getElementById("submitStatusChange").innerText =
+      "Belum selesai dibaca";
+    document.getElementById("submitStatusChange").innerText = "selesai dibaca";
+  } else {
+    document.getElementById("submitStatusChange").innerText =
+      "Belum selesai dibaca";
+    document.getElementById("submitStatusChange").innerText =
+      "Belum selesai dibaca";
+  }
+});
 
 function isStorageExist() {
   if (typeof Storage === undefined) {
@@ -47,6 +70,13 @@ function saveData() {
     localStorage.setItem(STORAGE_KEY, parsed);
     document.dispatchEvent(new Event(SAVED_EVENT));
   }
+}
+
+function clearInput() {
+  document.getElementById("inputBookTitle").value = "";
+  document.getElementById("inputBookAuthor").value = "";
+  document.getElementById("inputBookYear").value = "";
+  document.getElementById("inputBookIsComplete").checked = false;
 }
 
 function findBook(bookId) {
@@ -197,7 +227,11 @@ document.addEventListener("DOMContentLoaded", function () {
   inputForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addBook();
+    clearInput();
   });
+  const inputFormChange = document.getElementById("submitBookChange");
+  inputFormChange.style.display = "none";
+
   if (isStorageExist()) {
     loadDataFromStorage();
   }
