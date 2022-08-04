@@ -238,7 +238,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener(RENDER_EVENT, function () {
-  //console.log(books);
   const uncompletedBookList = document.getElementById(
     "incompleteBookshelfList"
   );
