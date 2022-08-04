@@ -3,6 +3,16 @@ const RENDER_EVENT = "render-todo";
 const BOOK_ID = "bookId";
 const BOOK_INCOMPLETED_ID = "incompleteBookshelfList";
 const BOOK_COMPLETED_ID = "completeBookshelfList";
+const SAVED_EVENT = "saved-book";
+const STORAGE_KEY = "BOOK-APPS";
+
+function isStorageExist() {
+  if (typeof Storage === undefined) {
+    alert("Browser kamu tidak mendukung local storage");
+    return false;
+  }
+  return true;
+}
 
 function generateId() {
   return +new Date();
@@ -16,6 +26,27 @@ function generateBookObject(id, bookTitle, bookAuthor, bookYear, isCompleted) {
     bookYear,
     isCompleted,
   };
+}
+
+function loadDataFromStorage() {
+  const serializedData = localStorage.getItem(STORAGE_KEY);
+  let data = JSON.parse(serializedData);
+
+  if (data !== null) {
+    for (const book of data) {
+      books.push(book);
+    }
+  }
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function saveData() {
+  if (isStorageExist()) {
+    const parsed = JSON.stringify(books);
+    localStorage.setItem(STORAGE_KEY, parsed);
+    document.dispatchEvent(new Event(SAVED_EVENT));
+  }
 }
 
 function findBook(bookId) {
@@ -108,6 +139,7 @@ function addBookToCompleted(bookId) {
 
   bookTarget.isCompleted = true;
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function removeBookFromCompleted(bookId) {
@@ -117,6 +149,7 @@ function removeBookFromCompleted(bookId) {
 
   books.splice(bookTarget, 1);
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function undoBookFromCompleted(bookId) {
@@ -126,6 +159,7 @@ function undoBookFromCompleted(bookId) {
 
   bookTarget.isCompleted = false;
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function addBook() {
@@ -151,7 +185,12 @@ function addBook() {
   }
 
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
+
+document.addEventListener(SAVED_EVENT, function () {
+  console.log(localStorage.getItem(STORAGE_KEY));
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   const inputForm = document.getElementById("inputBook");
@@ -159,6 +198,9 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     addBook();
   });
+  if (isStorageExist()) {
+    loadDataFromStorage();
+  }
 });
 
 document.addEventListener(RENDER_EVENT, function () {
